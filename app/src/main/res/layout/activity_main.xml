@@ -24,11 +24,11 @@
     <Button
         android:id="@+id/btn_add"
         android:onClick="onClickAddNotif"
+        android:background="@drawable/addbutton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@android:dimen/app_icon_size"
-        android:background="@drawable/addbutton"/>
-
+        />
 
 </FrameLayout>
