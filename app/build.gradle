@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.unex.notificationapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -42,4 +42,10 @@ dependencies {
 
     //GSON
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    //Collapsible Calendar
+    implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.3'
+
+
+    implementation 'com.shawnlin:number-picker:2.4.12'
 }

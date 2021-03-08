@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shrikanthravi.collapsiblecalendarview.data.Day;
+import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 import com.unex.notificationapp.R;
 import com.vivekkaushik.datepicker.DatePickerTimeline;
 
@@ -26,10 +29,9 @@ import java.util.Locale;
 
 public class NotifyPage extends AppCompatActivity {
 
-    int currentYear, currentMonth, currentDay;
-    private TimePicker tpAlarmTimePicker;
-    DatePickerTimeline datePickerTimeline;
     EditText etLabel;
+    CollapsibleCalendar viewCalendar;
+    Day day;
 
 
     @Override
@@ -41,26 +43,62 @@ public class NotifyPage extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
 //        View view = getSupportActionBar().getCustomView();
 
-        currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        currentMonth = Calendar.getInstance().get(Calendar.MONTH);
-        currentDay = Calendar.getInstance().get(Calendar.DATE);
 
-        tpAlarmTimePicker = findViewById(R.id.tp_alarm_time_Picker);
-        datePickerTimeline = findViewById(R.id.date_picker);
+        final CollapsibleCalendar collapsibleCalendar = findViewById(R.id.calendarView);
+
         etLabel = findViewById(R.id.et_label);
-        datePickerTimeline.setInitialDate(currentYear, currentMonth, currentDay);
 
+
+        collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
+            @Override
+            public void onDaySelect() {
+                day = viewCalendar.getSelectedDay();
+                Log.i(getClass().getName(), "Selected Day: " + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+//                Toast.makeText(NotifyPage.this,"Selected Day: " + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onItemClick(View view) {
+
+            }
+
+            @Override
+            public void onDataUpdate() {
+
+            }
+
+            @Override
+            public void onMonthChange() {
+
+            }
+
+            @Override
+            public void onWeekChange(int i) {
+
+            }
+
+            @Override
+            public void onDayChanged() {
+
+            }
+
+            @Override
+            public void onClickListener() {
+
+            }
+        });
     }
+
+
 
     public void onClickBack(View v){
         finish();
     }
     public void onClickSave(View v){
 
-        String date = String.valueOf(currentYear + currentMonth + currentDay);
-        String time = tpAlarmTimePicker.toString();
+        String date = String.valueOf(day.getMonth() + day.getDay() + day.getYear());
         String label = etLabel.getText().toString();
-        saveToSharedPref(label + " " + date + " " + time);
+        saveToSharedPref(label + " " + date);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
 
