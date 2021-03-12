@@ -46,6 +46,13 @@ dependencies {
     //Collapsible Calendar
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.3'
 
-
+    //Number picker
     implementation 'com.shawnlin:number-picker:2.4.12'
-}
+
+    //Alert Dialog
+    implementation 'com.github.salehyarahmadi:AndExAlertDialog:v1.0.1'
+
+    //ScrollView Bounce effect
+    compile 'me.everything:overscroll-decor-android:1.0.4'
+
+    }

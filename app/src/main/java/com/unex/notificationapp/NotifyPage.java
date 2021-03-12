@@ -4,17 +4,24 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shawnlin.numberpicker.NumberPicker;
 import com.shrikanthravi.collapsiblecalendarview.data.Day;
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 import com.unex.notificationapp.R;
@@ -27,11 +34,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import ir.androidexception.andexalertdialog.AndExAlertDialog;
+import ir.androidexception.andexalertdialog.AndExAlertDialogListener;
+import ir.androidexception.andexalertdialog.Animation;
+import ir.androidexception.andexalertdialog.Font;
+import ir.androidexception.andexalertdialog.InputType;
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
+
 public class NotifyPage extends AppCompatActivity {
 
-    EditText etLabel;
     CollapsibleCalendar viewCalendar;
     Day day;
+    NumberPicker npHour, npMin;
+    ListView lvLblDes;
+    ArrayAdapter<String> lblDesAdapter;
+    TextView tvTitle, tvDes;
 
 
     @Override
@@ -44,12 +61,29 @@ public class NotifyPage extends AppCompatActivity {
 //        View view = getSupportActionBar().getCustomView();
 
 
-        final CollapsibleCalendar collapsibleCalendar = findViewById(R.id.calendarView);
+//        lvLblDes = findViewById(R.id.lv_lbl_des);
+        tvTitle = findViewById(R.id.tv_title);
+        tvDes = findViewById(R.id.tv_des);
+        viewCalendar = findViewById(R.id.calendarView);
+        npHour = findViewById(R.id.np_hour);
+        npMin = findViewById(R.id.np_min);
 
-        etLabel = findViewById(R.id.et_label);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.sv_bouncyE);
+        OverScrollDecoratorHelper.setUpOverScroll(scrollView);
 
 
-        collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
+//        lblDesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mStringArray);
+//        lvLblDes.setAdapter(lblDesAdapter);
+
+        Calendar currentTime = Calendar.getInstance();
+        int currentHourIn24Format = currentTime.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = currentTime.get(Calendar.MINUTE);
+
+        npHour.setValue(currentHourIn24Format);
+        npMin.setValue(currentMinute);
+
+
+        viewCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
             @Override
             public void onDaySelect() {
                 day = viewCalendar.getSelectedDay();
@@ -87,9 +121,72 @@ public class NotifyPage extends AppCompatActivity {
 
             }
         });
+
+
     }
 
+    public void onClickTitle(View v){
+        alertTitleDialog();
+    }
 
+    public void onClickDes(View v){
+        alertDesDialog();
+    }
+
+    public void alertTitleDialog(){
+        new AndExAlertDialog.Builder(this)
+                .setTitle("Set Title")
+                .setMessage("")
+                .setPositiveBtnText("OK")
+                .setNegativeBtnText("Cancel")
+                .setCancelableOnTouchOutside(true)
+                .setFont(Font.QUICK_SAND)
+                .setImage(R.drawable.tick, 0)
+                .setEditText(true, false, "Title", InputType.TEXT_MULTI_LINE)
+                .OnPositiveClicked(new AndExAlertDialogListener() {
+                    @Override
+                    public void OnClick(String input) {
+                        tvTitle.setText(input);
+                    }
+                })
+                .OnNegativeClicked(new AndExAlertDialogListener() {
+                    @Override
+                    public void OnClick(String input) {
+                        finish();
+                    }
+                })
+                .setTitleTextColor(getTitleColor())
+                .setMessageTextColor(getTitleColor())
+                .setButtonTextColor(getTitleColor())
+                .build();
+    }
+    public void alertDesDialog(){
+        new AndExAlertDialog.Builder(this)
+                .setTitle("Set Description")
+                .setMessage("")
+                .setPositiveBtnText("OK")
+                .setNegativeBtnText("Cancel")
+                .setCancelableOnTouchOutside(true)
+                .setFont(Font.QUICK_SAND)
+                .setImage(R.drawable.tick, 0)
+                .setEditText(true, false, "Description", InputType.TEXT_MULTI_LINE)
+                .OnPositiveClicked(new AndExAlertDialogListener() {
+                    @Override
+                    public void OnClick(String input) {
+                        tvDes.setText(input);
+                    }
+                })
+                .OnNegativeClicked(new AndExAlertDialogListener() {
+                    @Override
+                    public void OnClick(String input) {
+                        finish();
+                    }
+                })
+                .setTitleTextColor(getTitleColor())
+                .setMessageTextColor(getTitleColor())
+                .setButtonTextColor(getTitleColor())
+                .build();
+    }
 
     public void onClickBack(View v){
         finish();
@@ -97,8 +194,13 @@ public class NotifyPage extends AppCompatActivity {
     public void onClickSave(View v){
 
         String date = String.valueOf(day.getMonth() + day.getDay() + day.getYear());
-        String label = etLabel.getText().toString();
-        saveToSharedPref(label + " " + date);
+        String timeH = String.valueOf(npHour);
+        String timeM = String.valueOf(npMin);
+        String taytel = String.valueOf(tvTitle);
+        String paliwanag = String.valueOf(tvDes);
+        String titleDes = taytel + "\n" + paliwanag;
+        String time = timeH + ":" + timeM;
+        saveToSharedPref(titleDes +"\n"+ date + "\n" + time);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
 

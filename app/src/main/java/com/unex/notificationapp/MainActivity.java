@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,6 +19,8 @@ import com.unex.notificationapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //remove data from listview
-                data.remove(mStringArray[i]);
-                activitiesArrayAdapter.notifyDataSetChanged();
+//                data.remove(mStringArray[i]);
+//                activitiesArrayAdapter.notifyDataSetChanged();
 
                 mStringArray = new String[data.size()];
                 mStringArray = (String[]) data.toArray(mStringArray);
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
     }
 
     public void onClickAddNotif(View v){
