@@ -7,35 +7,34 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ScrollView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.unex.notificationapp.NotifyPage;
-import com.unex.notificationapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView lvActivities;
     ArrayAdapter<String> activitiesArrayAdapter;
     String[] mStringArray = {};
+    Button btnAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnAdd = findViewById(R.id.btn_add);
         lvActivities = findViewById(R.id.lv_activities);
-        activitiesArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mStringArray);
-        lvActivities.setAdapter(activitiesArrayAdapter);
+
 
         SharedPreferences notifSharedPref = getSharedPreferences("notification", Context.MODE_PRIVATE);
         String notificationData = notifSharedPref.getString("notifData", null);
@@ -59,16 +58,32 @@ public class MainActivity extends AppCompatActivity {
                     data = gson.fromJson(aklatData, new TypeToken<List<String>>(){}.getType());
                 }
 
-                //remove data from listview
+//                remove data from listview
 //                data.remove(mStringArray[i]);
 //                activitiesArrayAdapter.notifyDataSetChanged();
-
-                mStringArray = new String[data.size()];
-                mStringArray = (String[]) data.toArray(mStringArray);
-                activitiesArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, mStringArray);
-                lvActivities.setAdapter(activitiesArrayAdapter);
                 saveToSharedPref(data);
                 return false;
+            }
+        });
+
+        lvActivities.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                int btn_initPosY = btnAdd.getScrollY();
+                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    btnAdd.animate().cancel();
+                    btnAdd.animate().translationYBy(720);
+                }else if (scrollState == SCROLL_STATE_FLING) {
+                    btnAdd.animate().cancel();
+                    btnAdd.animate().translationYBy(720);
+                } else {
+                    btnAdd.animate().cancel();
+                    btnAdd.animate().translationY(btn_initPosY);
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
 
@@ -87,4 +102,5 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("notifData", wholeDataString);
         editor.apply();
     }
+
 }

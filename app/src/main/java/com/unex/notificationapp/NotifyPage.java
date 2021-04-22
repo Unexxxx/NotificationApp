@@ -4,39 +4,28 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.shrikanthravi.collapsiblecalendarview.data.Day;
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
-import com.unex.notificationapp.R;
-import com.vivekkaushik.datepicker.DatePickerTimeline;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import ir.androidexception.andexalertdialog.AndExAlertDialog;
 import ir.androidexception.andexalertdialog.AndExAlertDialogListener;
-import ir.androidexception.andexalertdialog.Animation;
 import ir.androidexception.andexalertdialog.Font;
 import ir.androidexception.andexalertdialog.InputType;
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
@@ -48,7 +37,7 @@ public class NotifyPage extends AppCompatActivity {
     NumberPicker npHour, npMin;
     ListView lvLblDes;
     ArrayAdapter<String> lblDesAdapter;
-    TextView tvTitle, tvDes;
+    TextView tvTitle, tvDes, tvVenue;
 
 
     @Override
@@ -64,6 +53,7 @@ public class NotifyPage extends AppCompatActivity {
 //        lvLblDes = findViewById(R.id.lv_lbl_des);
         tvTitle = findViewById(R.id.tv_title);
         tvDes = findViewById(R.id.tv_des);
+        tvVenue = findViewById(R.id.tv_venue);
         viewCalendar = findViewById(R.id.calendarView);
         npHour = findViewById(R.id.np_hour);
         npMin = findViewById(R.id.np_min);
@@ -72,7 +62,7 @@ public class NotifyPage extends AppCompatActivity {
         OverScrollDecoratorHelper.setUpOverScroll(scrollView);
 
 
-//        lblDesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mStringArray);
+//        lblDesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mStringArray);
 //        lvLblDes.setAdapter(lblDesAdapter);
 
         Calendar currentTime = Calendar.getInstance();
@@ -132,6 +122,9 @@ public class NotifyPage extends AppCompatActivity {
     public void onClickDes(View v){
         alertDesDialog();
     }
+    public void onClickVenue(View v){
+        alertVenueDialog();
+    }
 
     public void alertTitleDialog(){
         new AndExAlertDialog.Builder(this)
@@ -187,20 +180,47 @@ public class NotifyPage extends AppCompatActivity {
                 .setButtonTextColor(getTitleColor())
                 .build();
     }
+    public void alertVenueDialog(){
+        new AndExAlertDialog.Builder(this)
+                .setTitle("Set Venue")
+                .setMessage("")
+                .setPositiveBtnText("OK")
+                .setNegativeBtnText("Cancel")
+                .setCancelableOnTouchOutside(true)
+                .setFont(Font.QUICK_SAND)
+                .setImage(R.drawable.tick, 0)
+                .setEditText(true, false, "Description", InputType.TEXT_MULTI_LINE)
+                .OnPositiveClicked(new AndExAlertDialogListener() {
+                    @Override
+                    public void OnClick(String input) {
+                        tvVenue.setText(input);
+                    }
+                })
+                .OnNegativeClicked(new AndExAlertDialogListener() {
+                    @Override
+                    public void OnClick(String input) {
+                        finish();
+                    }
+                })
+                .setTitleTextColor(getTitleColor())
+                .setMessageTextColor(getTitleColor())
+                .setButtonTextColor(getTitleColor())
+                .build();
+    }
 
     public void onClickBack(View v){
         finish();
     }
     public void onClickSave(View v){
 
-        String date = String.valueOf(day.getMonth() + day.getDay() + day.getYear());
-        String timeH = String.valueOf(npHour);
-        String timeM = String.valueOf(npMin);
-        String taytel = String.valueOf(tvTitle);
-        String paliwanag = String.valueOf(tvDes);
-        String titleDes = taytel + "\n" + paliwanag;
+        int timeH = npHour.getValue();
+        int timeM = npMin.getValue();
+        String taytel = tvTitle.getText().toString();
+        String paliwanag = tvDes.getText().toString();
+        String venue = tvVenue.getText().toString();
+        String titleDes = taytel + "\n" + paliwanag + "\n" + venue;
         String time = timeH + ":" + timeM;
-        saveToSharedPref(titleDes +"\n"+ date + "\n" + time);
+        saveToSharedPref(titleDes +"\n"+ (day.getMonth() + 1) + "/" + day.getDay() + "/" + day.getYear() + "\n" + time);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
 

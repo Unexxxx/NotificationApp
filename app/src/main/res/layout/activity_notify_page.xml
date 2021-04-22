@@ -94,11 +94,14 @@
     </LinearLayout>
 
 
-    <!--    <ListView-->
-    <!--        android:id="@+id/lv_lbl_des"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        />-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="15dp"
+        android:text="UPLOAD IMAGE"/>
+
     <ScrollView
         android:id="@+id/sv_bouncyE"
         android:layout_width="match_parent"
@@ -111,13 +114,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="15dp"
-                android:background="#555353" />
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:layout_marginBottom="15dp"-->
+<!--                android:background="#555353" />-->
 
             <TextView
                 android:id="@+id/tv_title"
@@ -146,6 +149,25 @@
                 android:layout_marginRight="20dp"
                 android:onClick="onClickDes"
                 android:text="Description"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="#555353" />
+
+            <TextView
+                android:id="@+id/tv_venue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:onClick="onClickVenue"
+                android:text="Venue"
                 android:textSize="16dp" />
 
             <View
